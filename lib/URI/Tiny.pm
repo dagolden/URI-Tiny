@@ -6,6 +6,27 @@ package URI::Tiny;
 # ABSTRACT: small, simple, correct URI parsing and generation
 # VERSION
 
+my %RE =
+  ( parse_uri => qr|^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?|, );
+
+sub parse {
+    my ( $class, $arg ) = @_;
+    return unless $arg =~ $RE{parse_uri};
+    my $self = {
+        scheme    => $2,
+        authority => $4,
+        path      => $5,
+        query     => $7,
+        fragment  => $9,
+    };
+    return bless $self, $class;
+}
+
+sub parts {
+    my ($self) = @_;
+    return {%$self};
+}
+
 1;
 
 =for Pod::Coverage BUILD
