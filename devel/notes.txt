@@ -1,0 +1,73 @@
+Notes on API design
+
+My goal is to have a single-file .pm library for handling URI's well
+that compiles with RFC 3986.
+
+URI's are challenging because:
+
+- They may be provided in escaped/encoded or unescaped/unencoded forms
+
+- Their presentation form may differ based on whether they are intended for
+  use in a web request (escaped, etc.) or human presentation (possibly
+  unescaped)
+
+- IDN is messy; there are homograph attacks to watch out for
+
+- The semantics of particular sections (like query parameters) may
+  change what needs to be escaped and how
+
+- Comparing URI's given the above is challenging
+
+- URIs may be URLs or URNs and URLs may be absolute, relative, schemeless,
+  etc.
+
+I'd like URI::Tiny to make these things as easy as possible.  Given
+an escaped or unescaped URI, I'd like it to parse it into its parts and
+normalize and decode them as much as possible/reasonable.
+
+Then I'd like to make it easy for a user to get an encoded or unencoded
+part or whole URI and to create derived URIs easily.
+
+## Thoughts on construction and derivation
+
+I think I'd like to separate out fully specified construction from parsing:
+
+    $u = URI::Tiny->parse($uri);
+    $u = URI::Tiny->new( \%parts );
+
+I think I'd like to avoid accessors and let modification happen during
+a cloning operation.
+
+    $u2 = $u1->clone( \%override );
+
+Presumably, parts should be validated somehow, but possibly only that they
+are legal given the RFC, and they should probably be normalized as well.
+E.g. non-restricted escapes should be de-escaped.
+
+## Thoughts on representations
+
+There are various possibilities for representation:
+
+(1) fully escaped, with non-ASCII domains converted to punycode, etc.  I.e.
+the most network-ready form
+
+(2) characters: decoded/unescaped to the greatest extent possible for human
+viewing or string comparisons
+
+(3) 1 or 2 above, but, with password information masked
+
+Note that (2) may not unescape everything.  For example, a form encoded in
+a query string may have escapes that would change the parse.  These should
+not be decoded even if others are.
+
+I'm thinking that methods could have a prefix that indicates what type of
+representation is desired.  E.g.
+
+    $u->ustring; # unencoded/escaped string
+    $u->estring; # encoded/escaped string
+
+    $u->uhost;      # unencoded/escaped host
+    $u->ufragment;  # unencoded/escaped fragment
+Should 
+
+
