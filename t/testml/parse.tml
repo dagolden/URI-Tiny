@@ -1,0 +1,19 @@
+=== http absolute
+--- uri: http://a/b/c/d;p?q#z
+--- yaml
+scheme    : 'http'
+authority : 'a'
+path      : '/b/c/d;p'
+query     : 'q'
+fragment  : 'z'
+
+
+=== file local
+--- uri: file:///a/b/c
+--- yaml
+scheme    : 'file'
+authority : ''
+path      : '/a/b/c'
+query     : ~
+fragment  : ~
+
