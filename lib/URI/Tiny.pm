@@ -27,6 +27,18 @@ sub parts {
     return {%$self};
 }
 
+sub params {
+    my ($self) = @_;
+    my %params;
+    my @parts = split /[&;]/, $self->{query};
+    for my $p (@parts) {
+        my ( $key, $value ) = split /=/, $p, 2;
+        return unless defined $value;
+        $params{$key} = $value;
+    }
+    return \%params;
+}
+
 1;
 
 =for Pod::Coverage BUILD

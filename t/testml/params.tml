@@ -1,0 +1,21 @@
+=== not key value
+--- uri: http://a/b/c/d;p?q#z
+--- yaml
+
+=== key-value
+--- uri: http://a/b/c/d;p?foo=bar#z
+--- yaml
+foo: bar
+
+=== key-value with ampersand
+--- uri: http://a/b/c/d;p?foo=bar&baz=bam#z
+--- yaml
+foo: bar
+baz: bam
+
+=== key-value with semicolon
+--- uri: http://a/b/c/d;p?foo=bar;baz=bam#z
+--- yaml
+foo: bar
+baz: bam
+

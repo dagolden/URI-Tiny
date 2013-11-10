@@ -14,6 +14,7 @@ use Exporter   ();
 our @ISA    = qw{ Exporter };
 our @EXPORT = qw{
     test_parse
+    test_params
     run_all_testml_files
     run_testml_file
     run_tml_t_file
@@ -124,6 +125,35 @@ sub test_parse {
         ok( my $got = eval { URI::Tiny->parse($uri) }, "parsed without error" )
             or diag $@;
         is_deeply( $got->parts, $expected, "parse correct" );
+    };
+}
+
+#--------------------------------------------------------------------------#
+# test_params
+#
+# two blocks: uri, yaml
+#--------------------------------------------------------------------------#
+
+sub test_params {
+    my ($block) = @_;
+
+    my ($uri, $yaml, $label) =
+      _testml_has_points($block, qw(uri yaml)) or return;
+
+    chomp($uri);
+    my $obj = CPAN::Meta::YAML->read_string($yaml);
+    my $expected = $obj->[0];
+
+    subtest "$label: $uri" => sub {
+        ok( my $got = eval { URI::Tiny->parse($uri) }, "parsed without error" )
+            or diag $@;
+        my $params = $got->params;
+        if ( defined $expected ) {
+            is_deeply( $params, $expected, "params correct" );
+        }
+        else {
+            is( $params, undef, "no valid params in the URI" );
+        }
     };
 }
 
