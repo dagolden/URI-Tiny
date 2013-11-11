@@ -7,17 +7,19 @@ package URI::Tiny;
 # VERSION
 
 my %RE =
-  ( parse_uri => qr|^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?|, );
+  (
+    parse_uri => qr|^(?:([^:/?#]+):)?(?://([^/?#]*))?([^?#]*)(?:\?([^#]*))?(?:#(.*))?|,
+  );
 
 sub parse {
     my ( $class, $arg ) = @_;
     return unless $arg =~ $RE{parse_uri};
     my $self = {
-        scheme    => $2,
-        authority => $4,
-        path      => $5,
-        query     => $7,
-        fragment  => $9,
+        scheme    => $1,
+        authority => $2,
+        path      => $3,
+        query     => $4,
+        fragment  => $5,
     };
     return bless $self, $class;
 }
