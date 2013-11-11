@@ -58,8 +58,7 @@ Good luck!
 
 =head1 SEE ALSO
 
-=for :list
-* Maybe other modules do related things.
+L<RFC 3986|http://tools.ietf.org/html/rfc3986>
 
 =cut
 
