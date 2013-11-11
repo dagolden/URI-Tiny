@@ -6,10 +6,10 @@ package URI::Tiny;
 # ABSTRACT: small, simple, correct URI parsing and generation
 # VERSION
 
-my %RE =
-  (
-    parse_uri => qr|^(?:([^:/?#]+):)?(?://([^/?#]*))?([^?#]*)(?:\?([^#]*))?(?:#(.*))?|,
-  );
+my %RE = (
+    parse_uri  => qr|^(?:([^:/?#]+):)?(?://([^/?#]*))?([^?#]*)(?:\?([^#]*))?(?:#(.*))?|,
+    parse_auth => qr{^(?:([^\@]*)\@)?(\[[^\]]*\]|[^:]*)?(?::(.*))?},
+);
 
 sub parse {
     my ( $class, $arg ) = @_;
@@ -21,7 +21,15 @@ sub parse {
         query     => $4,
         fragment  => $5,
     };
+
+    my ( $userinfo, $host, $port ) = $self->{authority} =~ $RE{parse_auth};
+    $host =~ s/^\[(.*)\]$/$1/; # strip brackets on IP Literal host
+    $self->{userinfo} = $userinfo;
+    $self->{host}     = _unescape_all($host);
+    $self->{port}     = $port;
+
     return bless $self, $class;
+
 }
 
 sub parts {
@@ -39,6 +47,12 @@ sub params {
         $params{$key} = $value;
     }
     return \%params;
+}
+
+sub _unescape_all {
+    my $str = shift;
+    $str =~ s/%([0-9a-f]{2})/chr(hex($1))/ieg;
+    return $str;
 }
 
 1;

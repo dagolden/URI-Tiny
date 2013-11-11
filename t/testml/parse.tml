@@ -3,17 +3,57 @@
 --- yaml
 scheme    : 'http'
 authority : 'a'
+userinfo  : ~
+host      : 'a'
+port      : ~
 path      : '/b/c/d;p'
 query     : 'q'
 fragment  : 'z'
-
 
 === file local
 --- uri: file:///a/b/c
 --- yaml
 scheme    : 'file'
 authority : ''
+userinfo  : ~
+host      : ''
+port      : ~
 path      : '/a/b/c'
 query     : ~
 fragment  : ~
 
+=== http user-host-port
+--- uri: http://user:pass@a:80/b/c/d;p?q#z
+--- yaml
+scheme    : 'http'
+authority : 'user:pass@a:80'
+userinfo  : 'user:pass'
+host      : 'a'
+port      : '80'
+path      : '/b/c/d;p'
+query     : 'q'
+fragment  : 'z'
+
+=== http user-ipv4-port
+--- uri: http://user:pass@10.0.0.1:80/b/c/d;p?q#z
+--- yaml
+scheme    : 'http'
+authority : 'user:pass@10.0.0.1:80'
+userinfo  : 'user:pass'
+host      : '10.0.0.1'
+port      : '80'
+path      : '/b/c/d;p'
+query     : 'q'
+fragment  : 'z'
+
+=== http user-ipliteral-port
+--- uri: http://user:pass@[fe80::1234%251]:80/b/c/d;p?q#z
+--- yaml
+scheme    : 'http'
+authority : 'user:pass@[fe80::1234%251]:80'
+userinfo  : 'user:pass'
+host      : 'fe80::1234%1'
+port      : '80'
+path      : '/b/c/d;p'
+query     : 'q'
+fragment  : 'z'
