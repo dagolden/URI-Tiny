@@ -6,10 +6,14 @@ package URI::Tiny;
 # ABSTRACT: small, simple, correct URI parsing and generation
 # VERSION
 
-my %RE = (
-    parse_uri  => qr|^(?:([^:/?#]+):)?(?://([^/?#]*))?([^?#]*)(?:\?([^#]*))?(?:#(.*))?|,
-    parse_auth => qr{^(?:([^\@]*)\@)?(\[[^\]]*\]|[^:]*)?(?::(.*))?},
-);
+my %RE;
+$RE{gen_delims} = qr{[\:\/\?\#\[\]\@]};
+$RE{sub_delims} = qr{[\!\$\&\'\(\)\*\+\,\;\=]};
+$RE{reserved}   = qr{[\:\/\?\#\[\]\@\!\$\&\'\(\)\*\+\,\;\=]};
+$RE{unreserved} = qr{[A-Za-z0-9._~-]};
+$RE{parse_auth} = qr{^(?:([^\@]*)\@)?(\[[^\]]*\]|[^:]*)?(?::(.*))?};
+$RE{parse_uri} =
+  qr{^(?:([^:/?#]+):)?(?://([^/?#]*))?([^?#]*)(?:\?([^#]*))?(?:#(.*))?};
 
 sub parse {
     my ( $class, $arg ) = @_;
