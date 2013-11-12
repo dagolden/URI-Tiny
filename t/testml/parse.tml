@@ -10,6 +10,18 @@ path      : '/b/c/d;p'
 query     : 'q'
 fragment  : 'z'
 
+=== http scheme normalization
+--- uri: hTTp://a/b/c/d;p?q#z
+--- yaml
+scheme    : 'http'
+authority : 'a'
+userinfo  : ~
+host      : 'a'
+port      : ~
+path      : '/b/c/d;p'
+query     : 'q'
+fragment  : 'z'
+
 === file local
 --- uri: file:///a/b/c
 --- yaml

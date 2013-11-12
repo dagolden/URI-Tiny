@@ -19,7 +19,7 @@ sub parse {
     my ( $class, $arg ) = @_;
     return unless $arg =~ $RE{parse_uri};
     my $self = {
-        scheme    => $1,
+        scheme    => lc $1, # normalize to lower case
         authority => $2,
         path      => $3,
         query     => $4,
